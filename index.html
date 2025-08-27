@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Para Ti</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500&display=swap');
+  
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    -webkit-font-smoothing: antialiased;
+  }
+  
+  body {
+    font-family: 'Montserrat', sans-serif;
+    background-color: #000;
+    color: #fff;
+    height: 100vh;
+    overflow: hidden;
+  }
+  
+  #canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+  }
+  
+  #content {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    z-index: 2;
+    width: 90%;
+    max-width: 500px;
+  }
+  
+  #message {
+    font-size: 1.6rem;
+    line-height: 1.6;
+    margin-bottom: 20px;
+    opacity: 0;
+    transition: opacity 1.5s ease;
+    color: #fff;
+  }
+  
+  #message.show {
+    opacity: 1;
+  }
+
+  #love-image {
+    width: 180px;
+    height: 180px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    margin: 0 auto 30px;
+    display: block;
+    opacity: 0;
+    transition: opacity 1s ease;
+  }
+
+  #love-image.show {
+    opacity: 1;
+  }
+  
+  #buttons {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 20px;
+    opacity: 0;
+    transition: opacity 1s ease;
+  }
+  
+  #buttons.show {
+    opacity: 1;
+  }
+  
+  button {
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    padding: 12px 28px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border-radius: 25px;
+    min-width: 140px;
+  }
+  
+  button:hover {
+    background: rgba(255, 255, 255, 0.2);
+  }
+  
+  #special-page {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #000;
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 1s ease;
+  }
+  
+  #special-page.show {
+    opacity: 1;
+    pointer-events: all;
+  }
+  
+  #special-page h1 {
+    font-size: 2.5rem;
+    margin-bottom: 30px;
+    color: #fff;
+    font-weight: 400;
+    letter-spacing: 3px;
+  }
+  
+  #video-container {
+    width: 90%;
+    max-width: 800px;
+  }
+  
+  #video-container iframe {
+    width: 100%;
+    height: calc(90vw * 9/16);
+    max-height: 450px;
+    border: none;
+  }
+  
+  .close-btn {
+    position: absolute;
+    top: 30px;
+    right: 30px;
+    background: transparent;
+    border: none;
+    color: #fff;
+    font-size: 1.5rem;
+    cursor: pointer;
+    opacity: 0.6;
+    transition: opacity 0.3s ease;
+  }
+  
+  .close-btn:hover {
+    opacity: 1;
+  }
+</style>
+</head>
+<body>
+
+<canvas id="canvas"></canvas>
+
+<div id="content">
+  <div id="message">
+    Me estoy esforzando xd<br>
+    Te amo con todo mi corazón para la reina de mis sueños.
+  </div>
+  <img id="love-image" src="1754688784103.png">
+  <div id="buttons">
+    <button id="continue-btn">Continuar</button>
+    <button id="stay-btn">Quedarse</button>
+  </div>
+</div>
+
+<div id="special-page">
+  <button class="close-btn">×</button>
+  <h1>S & V</h1>
+  <div id="video-container">
+    <iframe 
+      src="https://www.youtube.com/embed/rgx_peYT9ZY" 
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+      allowfullscreen>
+    </iframe>
+  </div>
+</div>
+
+<script>
+  // Configuración inicial
+  const canvas = document.getElementById('canvas');
+  const ctx = canvas.getContext('2d');
+  const message = document.getElementById('message');
+  const loveImage = document.getElementById('love-image');
+  const buttons = document.getElementById('buttons');
+  const continueBtn = document.getElementById('continue-btn');
+  const stayBtn = document.getElementById('stay-btn');
+  const specialPage = document.getElementById('special-page');
+  const closeBtn = document.querySelector('.close-btn');
+
+  let width, height;
+  let particles = [];
+  const particleCount = 200;
+  let animationFrameId;
+  let heartFormed = false;
+
+  // Inicialización
+  function init() {
+    resize();
+    createParticles();
+    animate();
+    
+    setTimeout(() => {
+      message.classList.add('show');
+      setTimeout(() => {
+        loveImage.classList.add('show');
+      }, 500);
+    }, 1000);
+    
+    setTimeout(() => {
+      buttons.classList.add('show');
+    }, 2000);
+    
+    setTimeout(formHeart, 500);
+  }
+
+  // Crear partículas
+  function createParticles() {
+    particles = [];
+    
+    for (let i = 0; i < particleCount; i++) {
+      particles.push({
+        x: Math.random() * width,
+        y: Math.random() * height,
+        size: Math.random() * 2 + 1,
+        speedX: Math.random() * 2 - 1,
+        speedY: Math.random() * 2 - 1,
+        targetX: null,
+        targetY: null,
+        color: `rgba(255, ${Math.floor(100 + Math.random() * 50)}, ${Math.floor(150 + Math.random() * 50)}, ${Math.random() * 0.5 + 0.3})`
+      });
+    }
+  }
+
+  // Formar corazón
+  function formHeart() {
+    if (heartFormed) return;
+    heartFormed = true;
+    
+    const centerX = width / 2;
+    const centerY = height / 2.5;
+    const heartSize = Math.min(width, height) / 4;
+    
+    particles.forEach((p, i) => {
+      const angle = (i / particleCount) * Math.PI * 2;
+      const x = 16 * Math.pow(Math.sin(angle), 3);
+      const y = -(13 * Math.cos(angle) - 5 * Math.cos(2 * angle) - 2 * Math.cos(3 * angle) - Math.cos(4 * angle));
+      
+      p.targetX = centerX + x * heartSize;
+      p.targetY = centerY + y * heartSize;
+    });
+  }
+
+  // Animación
+  function animate() {
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+    ctx.fillRect(0, 0, width, height);
+    
+    particles.forEach(p => {
+      if (p.targetX !== null && p.targetY !== null) {
+        p.x += (p.targetX - p.x) * 0.05;
+        p.y += (p.targetY - p.y) * 0.05;
+      } else {
+        p.x += p.speedX;
+        p.y += p.speedY;
+        
+        if (p.x < 0 || p.x > width) p.speedX *= -1;
+        if (p.y < 0 || p.y > height) p.speedY *= -1;
+      }
+      
+      ctx.fillStyle = p.color;
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+      ctx.fill();
+    });
+    
+    animationFrameId = requestAnimationFrame(animate);
+  }
+
+  // Redimensionar
+  function resize() {
+    width = canvas.width = window.innerWidth;
+    height = canvas.height = window.innerHeight;
+    
+    if (heartFormed) {
+      formHeart();
+    }
+  }
+
+  // Event Listeners
+  window.addEventListener('resize', resize);
+  
+  continueBtn.addEventListener('click', () => {
+    specialPage.classList.add('show');
+    document.querySelector('#video-container iframe').src += "?autoplay=1";
+  });
+  
+  stayBtn.addEventListener('click', () => {
+    for (let i = 0; i < 20; i++) {
+      particles.push({
+        x: Math.random() * width,
+        y: height + Math.random() * 50,
+        size: Math.random() * 2 + 1,
+        speedX: Math.random() * 1 - 0.5,
+        speedY: -(Math.random() * 3 + 2),
+        targetX: null,
+        targetY: null,
+        color: `rgba(255, ${Math.floor(100 + Math.random() * 50)}, ${Math.floor(150 + Math.random() * 50)}, ${Math.random() * 0.5 + 0.3})`
+      });
+    }
+  });
+  
+  closeBtn.addEventListener('click', () => {
+    specialPage.classList.remove('show');
+    document.querySelector('#video-container iframe').src = 
+      document.querySelector('#video-container iframe').src.replace("?autoplay=1", "");
+  });
+
+  // Iniciar
+  init();
+</script>
+</body>
+</html>

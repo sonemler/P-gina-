@@ -6,6 +6,7 @@
 <title>Para Ti</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=MedievalSharp&display=swap');
   
   * {
     margin: 0;
@@ -159,11 +160,267 @@
   .close-btn:hover {
     opacity: 1;
   }
+
+  /* GALERÍA MEJORADA - DISEÑO HORIZONTAL */
+  #gallery-btn {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    z-index: 5;
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    padding: 10px 20px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border-radius: 25px;
+  }
+  
+  #gallery-btn:hover {
+    background: rgba(255, 255, 255, 0.2);
+  }
+  
+  #gallery-section {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #000;
+    z-index: 15;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.8s ease;
+    padding: 20px;
+    overflow: hidden;
+  }
+  
+  #gallery-section.show {
+    opacity: 1;
+    pointer-events: all;
+  }
+  
+  .gallery-title {
+    font-family: 'MedievalSharp', cursive;
+    font-size: 3.5rem;
+    margin: 20px 0 30px;
+    color: #fff;
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.7);
+    letter-spacing: 4px;
+    text-align: center;
+  }
+  
+  .gallery-scroll-container {
+    width: 100%;
+    overflow-x: auto;
+    padding: 20px 0;
+    flex-grow: 1;
+  }
+  
+  .gallery-container {
+    display: flex;
+    gap: 25px;
+    padding: 10px 40px;
+    width: max-content;
+  }
+  
+  .gallery-item {
+    width: 280px;
+    height: 280px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    overflow: hidden;
+    position: relative;
+    cursor: pointer;
+    transition: all 0.4s ease;
+    flex-shrink: 0;
+  }
+  
+  .gallery-item:hover {
+    transform: translateY(-8px) scale(1.03);
+    box-shadow: 0 10px 25px rgba(255, 255, 255, 0.15);
+  }
+  
+  .gallery-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: all 0.5s ease;
+  }
+  
+  .gallery-item:hover img {
+    transform: scale(1.08);
+  }
+  
+  .gallery-item-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: linear-gradient(transparent, rgba(0, 0, 0, 0.8));
+    padding: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+  
+  .gallery-item:hover .gallery-item-overlay {
+    opacity: 1;
+  }
+  
+  .gallery-item-actions {
+    display: flex;
+    gap: 15px;
+  }
+  
+  .gallery-action-btn {
+    background: rgba(255, 255, 255, 0.2);
+    border: none;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  
+  .gallery-action-btn:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: scale(1.1);
+  }
+  
+  .gallery-action-btn i {
+    color: white;
+    font-size: 18px;
+  }
+  
+  /* Efecto de borde rojo/brillo para imágenes con like */
+  .gallery-item.liked {
+    box-shadow: 0 0 15px rgba(231, 76, 60, 0.6);
+    border: 2px solid #e74c3c;
+  }
+  
+  .gallery-item.liked::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-radius: 10px;
+    box-shadow: inset 0 0 20px rgba(231, 76, 60, 0.4);
+    pointer-events: none;
+  }
+  
+  .liked {
+    color: #e74c3c !important;
+  }
+  
+  #back-btn {
+    margin: 30px 0;
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    padding: 12px 30px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border-radius: 25px;
+  }
+  
+  #back-btn:hover {
+    background: rgba(255, 255, 255, 0.2);
+  }
+  
+  /* Modal para imagen expandida */
+  .image-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.95);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 20;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+  }
+  
+  .image-modal.show {
+    opacity: 1;
+    pointer-events: all;
+  }
+  
+  .modal-content {
+    max-width: 90%;
+    max-height: 90%;
+    border-radius: 8px;
+    box-shadow: 0 0 50px rgba(255, 255, 255, 0.2);
+  }
+  
+  .modal-close {
+    position: absolute;
+    top: 20px;
+    right: 30px;
+    font-size: 40px;
+    color: white;
+    cursor: pointer;
+    background: none;
+    border: none;
+    z-index: 21;
+  }
+  
+  /* Personalización de la barra de desplazamiento */
+  .gallery-scroll-container::-webkit-scrollbar {
+    height: 8px;
+  }
+  
+  .gallery-scroll-container::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 10px;
+  }
+  
+  .gallery-scroll-container::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 10px;
+  }
+  
+  .gallery-scroll-container::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.3);
+  }
+  
+  /* Iconos con Font Awesome */
+  .fa-heart:before {
+    content: "❤";
+    font-style: normal;
+  }
+  
+  .fa-expand:before {
+    content: "⛶";
+    font-style: normal;
+  }
 </style>
 </head>
 <body>
 
 <canvas id="canvas"></canvas>
+
+<button id="gallery-btn">Galería</button>
 
 <div id="content">
   <div id="message">
@@ -189,6 +446,121 @@
   </div>
 </div>
 
+<!-- Galería rediseñada con scroll horizontal -->
+<div id="gallery-section">
+  <h1 class="gallery-title">GALERIA</h1>
+  
+  <div class="gallery-scroll-container">
+    <div class="gallery-container">
+      <div class="gallery-item">
+        <img src="gato1.jpg" alt="Gato 1">
+        <div class="gallery-item-overlay">
+          <div class="gallery-item-actions">
+            <button class="gallery-action-btn like-btn">
+              <i class="fa-heart"></i>
+            </button>
+            <button class="gallery-action-btn expand-btn">
+              <i class="fa-expand"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+      
+      <div class="gallery-item">
+        <img src="gato2.jpg" alt="Gato 2">
+        <div class="gallery-item-overlay">
+          <div class="gallery-item-actions">
+            <button class="gallery-action-btn like-btn">
+              <i class="fa-heart"></i>
+            </button>
+            <button class="gallery-action-btn expand-btn">
+              <i class="fa-expand"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+      
+      <div class="gallery-item">
+        <img src="gato3.jpg" alt="Gato 3">
+        <div class="gallery-item-overlay">
+          <div class="gallery-item-actions">
+            <button class="gallery-action-btn like-btn">
+              <i class="fa-heart"></i>
+            </button>
+            <button class="gallery-action-btn expand-btn">
+              <i class="fa-expand"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+      
+      <div class="gallery-item">
+        <img src="gato4.jpg" alt="Gato 4">
+        <div class="gallery-item-overlay">
+          <div class="gallery-item-actions">
+            <button class="gallery-action-btn like-btn">
+              <i class="fa-heart"></i>
+            </button>
+            <button class="gallery-action-btn expand-btn">
+              <i class="fa-expand"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+      
+      <div class="gallery-item">
+        <img src="gato5.jpg" alt="Gato 5">
+        <div class="gallery-item-overlay">
+          <div class="gallery-item-actions">
+            <button class="gallery-action-btn like-btn">
+              <i class="fa-heart"></i>
+            </button>
+            <button class="gallery-action-btn expand-btn">
+              <i class="fa-expand"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+      
+      <div class="gallery-item">
+        <img src="gato7.jpg" alt="Gato 7">
+        <div class="gallery-item-overlay">
+          <div class="gallery-item-actions">
+            <button class="gallery-action-btn like-btn">
+              <i class="fa-heart"></i>
+            </button>
+            <button class="gallery-action-btn expand-btn">
+              <i class="fa-expand"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+      
+      <div class="gallery-item">
+        <img src="gato8.jpg" alt="Gato 8">
+        <div class="gallery-item-overlay">
+          <div class="gallery-item-actions">
+            <button class="gallery-action-btn like-btn">
+              <i class="fa-heart"></i>
+            </button>
+            <button class="gallery-action-btn expand-btn">
+              <i class="fa-expand"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <button id="back-btn">Volver</button>
+</div>
+
+<!-- Modal para imagen expandida -->
+<div class="image-modal">
+  <button class="modal-close">×</button>
+  <img class="modal-content" src="" alt="Imagen expandida">
+</div>
+
 <script>
   // Configuración inicial
   const canvas = document.getElementById('canvas');
@@ -200,7 +572,13 @@
   const stayBtn = document.getElementById('stay-btn');
   const specialPage = document.getElementById('special-page');
   const closeBtn = document.querySelector('.close-btn');
-
+  const galleryBtn = document.getElementById('gallery-btn');
+  const gallerySection = document.getElementById('gallery-section');
+  const backBtn = document.getElementById('back-btn');
+  const imageModal = document.querySelector('.image-modal');
+  const modalClose = document.querySelector('.modal-close');
+  const modalImage = document.querySelector('.modal-content');
+  
   let width, height;
   let particles = [];
   const particleCount = 200;
@@ -225,6 +603,9 @@
     }, 2000);
     
     setTimeout(formHeart, 500);
+    
+    // Inicializar funcionalidad de la galería
+    initGallery();
   }
 
   // Crear partículas
@@ -300,6 +681,65 @@
     }
   }
 
+  // Inicializar funcionalidad de la galería
+  function initGallery() {
+    // Botones de like
+    const likeButtons = document.querySelectorAll('.like-btn');
+    likeButtons.forEach(btn => {
+      btn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        const heartIcon = this.querySelector('i');
+        heartIcon.classList.toggle('liked');
+        
+        // Añadir o quitar efecto de borde rojo/brillo
+        const galleryItem = this.closest('.gallery-item');
+        galleryItem.classList.toggle('liked');
+      });
+    });
+    
+    // Botones de expandir
+    const expandButtons = document.querySelectorAll('.expand-btn');
+    expandButtons.forEach(btn => {
+      btn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        const imgSrc = this.closest('.gallery-item').querySelector('img').src;
+        openImageModal(imgSrc);
+      });
+    });
+    
+    // También permitir expandir haciendo clic en la imagen
+    const galleryItems = document.querySelectorAll('.gallery-item');
+    galleryItems.forEach(item => {
+      item.addEventListener('click', function(e) {
+        if (!e.target.closest('.gallery-item-actions')) {
+          const imgSrc = this.querySelector('img').src;
+          openImageModal(imgSrc);
+        }
+      });
+    });
+  }
+  
+  // Abrir modal con imagen
+  function openImageModal(src) {
+    modalImage.src = src;
+    imageModal.classList.add('show');
+  }
+  
+  // Cerrar modal de imagen
+  function closeImageModal() {
+    imageModal.classList.remove('show');
+  }
+
+  // Mostrar galería
+  function showGallery() {
+    gallerySection.classList.add('show');
+  }
+
+  // Ocultar galería
+  function hideGallery() {
+    gallerySection.classList.remove('show');
+  }
+
   // Event Listeners
   window.addEventListener('resize', resize);
   
@@ -327,6 +767,18 @@
     specialPage.classList.remove('show');
     document.querySelector('#video-container iframe').src = 
       document.querySelector('#video-container iframe').src.replace("?autoplay=1", "");
+  });
+
+  // Event listeners para la galería
+  galleryBtn.addEventListener('click', showGallery);
+  backBtn.addEventListener('click', hideGallery);
+  modalClose.addEventListener('click', closeImageModal);
+  
+  // Cerrar modal al hacer clic fuera de la imagen
+  imageModal.addEventListener('click', (e) => {
+    if (e.target === imageModal) {
+      closeImageModal();
+    }
   });
 
   // Iniciar
